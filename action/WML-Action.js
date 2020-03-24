@@ -6,7 +6,7 @@
   *
   * @return Output of action and must be a JSON format
   *
-  * TO TEST: {"AVGHEARTBEATSPERMIN":93,"PALPITATIONSPERDAY":22,"CHOLESTEROL":180,"BMI":23,"AGE":52,"SEX":"M","FAMILYHISTORY":"Y","SMOKERLAST5YRS":"Y","EXERCISEMINPERWEEK":0}
+  * TO TEST: {"BPM":93,"PPD":22,"COLESTEROL":180,"MC":23,"IDADE":52,"SEXO":"M","HF":"S","FUMANTE5ANOS":"S","EPS":120}
   */
 const request = require('request');
 function main(params) {
@@ -20,7 +20,7 @@ function main(params) {
             auth: {
                 // TODO: Replace "pass" with äpikey" from credentials of Watson Machine Learning service
                 user: "apikey",
-                pass: "<API KEY>"
+                pass: "<API Key>"
             },
             json: true
         };
@@ -35,17 +35,17 @@ function main(params) {
     };
 
     return new Promise((resolve, reject) => {
-        const body = {fields: ["AVGHEARTBEATSPERMIN", "PALPITATIONSPERDAY", "CHOLESTEROL", "BMI", "AGE", "SEX", "FAMILYHISTORY", "SMOKERLAST5YRS", "EXERCISEMINPERWEEK"], 
-      values: [[params.AVGHEARTBEATSPERMIN,params.PALPITATIONSPERDAY,params.CHOLESTEROL,params.BMI,params.AGE,params.SEX,params.FAMILYHISTORY,params.SMOKERLAST5YRS,params.EXERCISEMINPERWEEK]]};
+        const body = {fields: ["BPM", "PPD", "COLESTEROL", "MC", "IDADE", "SEXO", "HF", "FUMANTE5ANOS", "EPS"], 
+      values: [[params.BPM,params.PPD,params.COLESTEROL,params.MC,params.IDADE,params.SEXO,params.HF,params.FUMANTE5ANOS,params.EPS]]};
         
         // TODO: Create a acces token:
         // curl -X POST 'https://iam.cloud.ibm.com/identity/token' -H 'Content-Type: application/x-www-form-urlencoded' -d 'grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=<WML API Key>'
-        const _token = {"access_token":"<ACCESS TOKEN>"};
+        const _token = {"access_token":......"};
 
         getToken().then(token => {
             const options = {
                 // TODO: Replace with SCORING END-POINT from IMPLEMENTATION tab on Watson Machine Learning deployment, on Watson Studio
-                url: "<SCORING END-POINT URL>",
+                url: "https://us-south.ml.cloud.ibm.com/v3/wml_instances/d696b5ac-7042-45ef-84cf-0dd33d77de3a/deployments/0dfd4a78-5b21-432e-90bc-fb8f5e5aa589/online",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ` + _token.access_token
