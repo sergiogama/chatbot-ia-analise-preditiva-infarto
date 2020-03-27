@@ -63,6 +63,18 @@
       "minor_version": "2018-11-08"
     }
   },
+  "webhooks": [
+    {
+      "url": "https://us-east.functions.cloud.ibm.com/api/v1/namespaces/Developer%20Advocacy_Developer%20Advocacy/actions/ap?blocking=true",
+      "name": "main_webhook",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Basic M2M0NDU4ZDAtZDcxZS00NTY3LWI5ODMtZTQyYTIwZGQwNTdkOjlibzVXRFNlUzFrM3oxcUxYZUpJeWpUTU5rSnFiS2JSOXFpQm5UYk1yMHJDY2R0aGhvY3RtSDYzaEtQdFNjSGk="
+        }
+      ]
+    }
+  ],
   "dialog_nodes": [
     {
       "type": "event_handler",
@@ -154,15 +166,15 @@
           "name": "main_webhook",
           "type": "webhook",
           "parameters": {
-            "AGE": "<? $idade.toInt() ?>",
-            "BMI": "<? $mc.toInt() ?>",
-            "SEX": "$sexo",
-            "CHOLESTEROL": "<? $c.toInt() ?>",
-            "FAMILYHISTORY": "$hf",
-            "SMOKERLAST5YRS": "$sl5y",
-            "EXERCISEMINPERWEEK": "<? $epw.toInt() ?>",
-            "PALPITATIONSPERDAY": "<? $ppd.toInt() ?>",
-            "AVGHEARTBEATSPERMIN": "<? $bpm.toInt() ?>"
+            "HF": "$hf",
+            "MC": "<? $mc.toInt() ?>",
+            "BPM": "<? $bpm.toInt() ?>",
+            "EPS": "<? $eps.toInt() ?>",
+            "PPD": "<? $ppd.toInt() ?>",
+            "SEXO": "$sexo",
+            "IDADE": "<? $idade.toInt() ?>",
+            "COLESTEROL": "<? $colesterol.toInt() ?>",
+            "FUMANTE5ANOS": "$fumante5anos"
           },
           "result_variable": "resultado"
         }
@@ -194,7 +206,7 @@
       "type": "slot",
       "output": {},
       "parent": "node_1_1583517990634",
-      "variable": "$c",
+      "variable": "$colesterol",
       "dialog_node": "slot_2_1583519215221",
       "previous_sibling": "slot_3_1583518163817"
     },
@@ -217,7 +229,7 @@
       "type": "slot",
       "output": {},
       "parent": "node_1_1583517990634",
-      "variable": "$epw",
+      "variable": "$eps",
       "dialog_node": "slot_8_1583781053961",
       "previous_sibling": "slot_7_1583780992703"
     },
@@ -258,7 +270,7 @@
       "type": "slot",
       "output": {},
       "parent": "node_1_1583517990634",
-      "variable": "$sl5y",
+      "variable": "$fumante5anos",
       "dialog_node": "slot_7_1583780992703",
       "previous_sibling": "slot_10_1583780838586"
     },
@@ -397,7 +409,7 @@
       "output": {},
       "parent": "slot_7_1583780992703",
       "context": {
-        "sl5y": "@Sim_ou_Nao"
+        "fumante5anos": "@Sim_ou_Nao"
       },
       "conditions": "@Sim_ou_Nao",
       "event_name": "input",
@@ -514,7 +526,7 @@
       "output": {},
       "parent": "slot_2_1583519215221",
       "context": {
-        "c": "@sys-number"
+        "colesterol": "@sys-number"
       },
       "conditions": "@sys-number",
       "event_name": "input",
@@ -687,7 +699,7 @@
       "output": {},
       "parent": "slot_8_1583781053961",
       "context": {
-        "epw": "@sys-number"
+        "eps": "@sys-number"
       },
       "conditions": "@sys-number",
       "event_name": "input",
