@@ -10,45 +10,51 @@
   */
 const request = require('request');
 function main(params) {
-    const getToken = () => {
-        const options = {
-            // us-south if the region of your service is Dallas
-            url: "https://us-south.ml.cloud.ibm.com/v3/identity/token",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            auth: {
-                // TODO: Replace "pass" with äpikey" from credentials of Watson Machine Learning service
-                user: "apikey",
-                pass: "<API Key>"
-            },
-            json: true
-        };
-        return new Promise((resolve, reject) => {
-            request.get(options, (error, resp, body) => {
-                if (error) reject(error);
-                else {
-                    resolve(body.token);
-                }
-            });
-        });
+const getToken = () => {
+    const options = {
+        // us-south if the region of your service is Dallas
+        url: "https://iam.cloud.ibm.com/identity/token",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        form: {
+            grant_type: "urn:ibm:params:oauth:grant-type:apikey",
+            // TODO: Create a IBM Cloud API Key and copy it below:
+            apikey: "<API KEY>"
+        },
+        json: true
     };
+    return new Promise((resolve, reject) => {
+        request.post(options, (error, resp, body) => {
+            if (error) reject(error);
+            else {
+                resolve(body.access_token);
+            }
+        });
+    });
+};
 
     return new Promise((resolve, reject) => {
-        const body = {fields: ["BPM", "PPD", "COLESTEROL", "MC", "IDADE", "SEXO", "HF", "FUMANTE5ANOS", "EPS"], 
-      values: [[params.BPM,params.PPD,params.COLESTEROL,params.MC,params.IDADE,params.SEXO,params.HF,params.FUMANTE5ANOS,params.EPS]]};
+       const body = {
+            "input_data": [
+                    {fields: 
+                       ["BPM", "PPD", "COLESTEROL", "MC", "IDADE", "SEXO", "HF", "FUMANTE5ANOS", "EPS"], 
+                     values: 
+                       [[params.BPM,params.PPD,params.COLESTEROL,params.MC,params.IDADE,params.SEXO,params.HF,params.FUMANTE5ANOS,params.EPS]]}
+                ]};
         
         // TODO: Create a acces token:
+        // The command below you get on implementation tab WML deployment
         // curl -X POST 'https://iam.cloud.ibm.com/identity/token' -H 'Content-Type: application/x-www-form-urlencoded' -d 'grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=<WML API Key>'
-        const _token = {"access_token":......"};
-
+        // Use the follwing token only if the getToken fail
+        const _token = {"access_token":<ACCESS_TOKEN>};
         getToken().then(token => {
             const options = {
                 // TODO: Replace with SCORING END-POINT from IMPLEMENTATION tab on Watson Machine Learning deployment, on Watson Studio
-                url: "https://us-south.ml.cloud.ibm.com/v3/wml_instances/d696b5ac-7042-45ef-84cf-0dd33d77de3a/deployments/0dfd4a78-5b21-432e-90bc-fb8f5e5aa589/online",
+                url: "https://us-south.ml.cloud.ibm.com/ml/v4/deployments/sdp1/predictions?version=2023-04-22",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ` + _token.access_token
+                    "Authorization": `Bearer ` + token // _token.access_token (use case we get the token out of this code)
                 },
                 body: body,
                 json: true
@@ -63,9 +69,9 @@ function main(params) {
                 }
                 else {
                     resolve({
-                        "err": false,
-                        "result": data.values[0][0],
-                        "confidence": data.values[0][1]
+                        "err": false, "result":{
+                        "prediction": data.predictions[0].values[0][0],
+                        "confidence": data.predictions[0].values[0][1][0]}
                     });
                 }
             });
